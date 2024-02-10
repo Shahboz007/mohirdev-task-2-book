@@ -15,7 +15,6 @@ function checkFileExists(path) {
 
 // index
 function index(res) {
-  console.log("test", checkFileExists(dataPath));
   if (!checkFileExists(dataPath)) return notFoundRes(res);
 
   fs.readFileSync(
