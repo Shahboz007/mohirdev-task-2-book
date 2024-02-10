@@ -1,32 +1,44 @@
 const fs = require("fs");
 const path = require("path");
-const { notFoundRes } = require("../service/response");
+const {
+  notFoundRes,
+  successRes,
+  serverErrRes,
+} = require("../service/response");
+const { log } = require("console");
+const { mainReadFile } = require("../service/file");
 
 const dataPath = "../data/";
 const fileName = "books.json";
+const fullFilePath = path.join(__dirname, dataPath, fileName);
 
 function createFile(data = []) {
   fs.writeFileSync(path.join(__dirname, dataPath, fileName), data);
 }
 
-function checkFileExists(path) {
-  return fs.existsSync(path);
+function checkFileExists(url) {
+  return fs.existsSync(url);
 }
 
 // index
-function index(res) {
-  if (!checkFileExists(dataPath)) return notFoundRes(res);
+async function index(res) {
+  if (!checkFileExists(fullFilePath)) return notFoundRes(res);
 
-  fs.readFileSync(
-    path.join(__dirname, dataPath, fileName),
-    "utf8",
-    (err, data) => {
-      if (err) throw err;
-      console.log(data);
-    }
-  );
+  console.log(fullFilePath);
+
+  try {
+    const data = mainReadFile(fullFilePath);
+    successRes(res, JSON.parse(data))
+  } catch (err) {
+    console.error("Error reading file:", err);
+    successRes(res, err)
+  }
 }
+
 // show
+function show(res, bookId) {
+  if (!checkFileExists(fullFilePath)) return notFoundRes(res);
+}
 // edit
 // delete
 

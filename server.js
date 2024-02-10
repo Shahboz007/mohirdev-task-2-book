@@ -6,7 +6,7 @@ const { getAllBooks } = require("./modules/books");
 const server = http.createServer((req, res) => {
   switch (req.url) {
     case "/":
-      res.end("Home");
+      res.end("Home"); break;
     case "/books": getAllBooks(res)
   }
 });
