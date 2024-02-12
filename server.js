@@ -115,11 +115,43 @@ const server = http.createServer((req, res) => {
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify(books[index]));
           });
-        }else {
-          res.writeHead(404, {'Content-Type':'application/json'});
-          res.end(JSON.stringify({error:'Book not found'}));
+        } else {
+          res.writeHead(404, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Book not found" }));
         }
       });
+    });
+  } else if (method === "DELETE" && url.startsWith("/books/")) {
+    const id = parseInt(url.split("/")[2]);
+
+    fs.readFile(FILE_PATH, "utf8", (err, data) => {
+      if (err) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal Server Error" }));
+        return;
+      }
+
+      const books = JSON.parse(data);
+      const book = books.find((item) => item.id === id);
+
+      if (!book) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Book not found" }));
+        return;
+      } else {
+        const newBooks = books.filter((item) => item.id !== book.id);
+        fs.writeFile(FILE_PATH, JSON.stringify(newBooks, null, 2), (err) => {
+          if (err) {
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "Internal Server Error" }));
+          }
+
+          res.writeHead(203, { "Content-Type": "application/json" });
+          delete book.id;
+          res.end(JSON.stringify(book));
+          return;
+        });
+      }
     });
   } else {
     res.end("Page not found");
