@@ -11,6 +11,16 @@ function successRes(res, data) {
   );
 }
 
+function notFound(res,notFoundId) {
+  res.writeHead(404, headData);
+  res.end(
+    JSON.stringify({
+      success: true,
+      message: `This ${notFoundId} book not found`,
+    })
+  );
+}
+
 function serverError(res,err) {
   console.log('Internal Server Err', err)
   res.writeHead(500, headData);
@@ -24,5 +34,6 @@ function serverError(res,err) {
 
 module.exports = {
   successRes,
+  notFound,
   serverError,
 };
