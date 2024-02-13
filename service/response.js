@@ -15,7 +15,7 @@ function notFound(res,notFoundId) {
   res.writeHead(404, headData);
   res.end(
     JSON.stringify({
-      success: true,
+      success: false,
       message: `This ${notFoundId} book not found`,
     })
   );
@@ -26,7 +26,7 @@ function serverError(res,err) {
   res.writeHead(500, headData);
   res.end(
     JSON.stringify({
-      success: true,
+      success: false,
       message: "Internal Server Error",
     })
   );
