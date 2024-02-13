@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const { getAllBook } = require("./module/book");
 
 const PORT = 4000;
 const FILE_PATH = path.join(__dirname, "/data/", "books.json");
@@ -10,16 +11,7 @@ console.log(FILE_PATH);
 const server = http.createServer((req, res) => {
   const { method, url, headers } = req;
   if (method === "GET" && url === "/books") {
-    fs.readFile(FILE_PATH, "utf8", (err, data) => {
-      if (err) {
-        // res.writeHead(500, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ err: "Internal Server Error" }));
-        return;
-      }
-
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(data);
-    });
+    getAllBook(res)
   } else if (method === "GET" && url.startsWith("/books/")) {
     const id = parseInt(url.split("/")[2]);
     fs.readFile(FILE_PATH, "utf8", (err, data) => {
