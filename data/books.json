@@ -1,10 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "Odam bo'lish qiyin",
-    "author": "O'tkir Hoshimov"
-  },
-  {
     "id": 2,
     "title": "Sariq devni minib",
     "author": "Xudoyberdi To'xtaboyev"
@@ -22,11 +17,6 @@
   {
     "id": 5,
     "title": "Sariq devni minib23",
-    "author": "Xudoyberdi To'xtaboyev"
-  },
-  {
-    "id": 6,
-    "title": "Sariq devni minibasd",
     "author": "Xudoyberdi To'xtaboyev"
   }
 ]

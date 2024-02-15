@@ -92,11 +92,7 @@ function updateBook(req, res, bookId) {
 
         if (index !== -1) {
           // Validating existing
-          if (
-            books.find(
-              (book) => book.title === title
-            )
-          ) {
+          if (books.find((book) => book.title === title)) {
             return existingRes(res);
           }
 
@@ -120,5 +116,27 @@ function updateBook(req, res, bookId) {
 }
 
 // Delete book
+function deleteBook(res, bookId) {
+  readFile(FILE_PATH)
+    .then((books) => {
+      const index = books.findIndex((item) => item.id === bookId);
 
-module.exports = { getAllBook, getBook, addBook, updateBook };
+      if (index !== -1) {
+        const filterData = books.filter((item) => item.id !== bookId);
+        writeFile(FILE_PATH, filterData)
+          .then(() => {
+            return successRes(res);
+          })
+          .catch((err) => {
+            return serverError(err);
+          });
+      } else {
+        return notFound(res, bookId);
+      }
+    })
+    .catch((err) => {
+      return serverError(res, err);
+    });
+}
+
+module.exports = { getAllBook, getBook, addBook, updateBook, deleteBook };
