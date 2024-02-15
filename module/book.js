@@ -66,7 +66,6 @@ function addBook(req, res) {
               return createdRes(res, newBook);
             })
             .catch((err) => {
-              console.log("render ==========================");
               return serverError(res, err);
             });
         }
@@ -77,7 +76,9 @@ function addBook(req, res) {
   });
 }
 
-// Put book
+// Update book
+function updateBook() {}
+
 // Delete book
 
 module.exports = { getAllBook, getBook, addBook };
