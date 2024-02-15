@@ -1,7 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
-const { getAllBook, getBook } = require("./module/book");
+const { getAllBook, getBook, addBook } = require("./module/book");
 
 const PORT = 4000;
 const FILE_PATH = path.join(__dirname, "/data/", "books.json");
@@ -14,47 +14,7 @@ const server = http.createServer((req, res) => {
   else if (method === "GET" && url.startsWith("/books/")) {
     return getBook(res, parseInt(url.split("/")[2]));
   } else if (method === "POST" && url === "/books") {
-    let body = "";
-    req.on("data", (chunk) => {
-      body += chunk.toString();
-    });
-
-    req.on("end", () => {
-      const { title, author } = JSON.parse(body);
-      fs.readFile(FILE_PATH, "utf8", (err, data) => {
-        if (err) {
-          res.writeHead(500, { "Content-Type": "application/json" });
-          req.end(JSON.stringify({ error: "Internal Server Error" }));
-          return;
-        }
-
-        const books = JSON.parse(data);
-        const existingBook = books.find((book) => book.title === title);
-
-        if (existingBook) {
-          res.writeHead(409, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: "Book already exists" }));
-        } else {
-          const newBook = {
-            id: books.length + 1,
-            title,
-            author,
-          };
-
-          books.push(newBook);
-          fs.writeFile(FILE_PATH, JSON.stringify(books, null, 2), (err) => {
-            if (err) {
-              res.writeHead(500, { "Content-Type": "application/json" });
-              res.end(JSON.stringify({ error: "Internal Server Error" }));
-              return;
-            }
-
-            res.writeHead(201, { "Content-Type": "application/json" });
-            res.end(JSON.stringify(newBook));
-          });
-        }
-      });
-    });
+    return addBook(req, res);
   } else if (method === "PUT" && url.startsWith("/books/")) {
     const id = parseInt(url.split("/")[2]);
 

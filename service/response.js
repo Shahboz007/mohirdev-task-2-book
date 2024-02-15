@@ -11,7 +11,16 @@ function successRes(res, data) {
   );
 }
 
-function notFound(res,notFoundId) {
+function createdRes(res, data) {
+  res.writeHead(201, headData);
+  res.end(JSON.stringify({
+    success: true,
+    message: 'Book created',
+    data
+  }));
+}
+
+function notFound(res, notFoundId) {
   res.writeHead(404, headData);
   res.end(
     JSON.stringify({
@@ -21,8 +30,18 @@ function notFound(res,notFoundId) {
   );
 }
 
-function serverError(res,err) {
-  console.log('Internal Server Err', err)
+function existingRes(res) {
+  res.writeHead(200, headData);
+  res.end(
+    JSON.stringify({
+      success: false,
+      message: "Book already exists",
+    })
+  );
+}
+
+function serverError(res, err) {
+  console.log("Internal Server Err", err);
   res.writeHead(500, headData);
   res.end(
     JSON.stringify({
@@ -34,6 +53,8 @@ function serverError(res,err) {
 
 module.exports = {
   successRes,
+  createdRes,
   notFound,
+  existingRes,
   serverError,
 };

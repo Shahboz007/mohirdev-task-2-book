@@ -12,6 +12,19 @@ async function readFile(FILE_PATH) {
   });
 }
 
+async function writeFile(FILE_PATH, data) {
+  return await new Promise((resolve, rejects) => {
+    fs.writeFile(FILE_PATH, JSON.stringify(data, null, 2), (err) => {
+      if (err) {
+        return rejects(err);
+      }
+
+      return resolve();
+    });
+  });
+}
+
 module.exports = {
   readFile,
+  writeFile
 };
