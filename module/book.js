@@ -77,8 +77,48 @@ function addBook(req, res) {
 }
 
 // Update book
-function updateBook() {}
+function updateBook(req, res, bookId) {
+  let body = "";
+  req.on("data", (chunk) => {
+    body += chunk.toString();
+  });
+
+  req.on("end", () => {
+    const { title, author } = JSON.parse(body);
+
+    readFile(FILE_PATH)
+      .then((books) => {
+        const index = books.findIndex((item) => item.id === bookId);
+
+        if (index !== -1) {
+          // Validating existing
+          if (
+            books.find(
+              (book) => book.title === title
+            )
+          ) {
+            return existingRes(res);
+          }
+
+          books[index] = { id: bookId, title, author };
+
+          writeFile(FILE_PATH, books)
+            .then(() => {
+              return successRes(res);
+            })
+            .catch((err) => {
+              return serverError(res, err);
+            });
+        } else {
+          return notFound(res, bookId);
+        }
+      })
+      .catch((err) => {
+        return serverError(res, err);
+      });
+  });
+}
 
 // Delete book
 
-module.exports = { getAllBook, getBook, addBook };
+module.exports = { getAllBook, getBook, addBook, updateBook };
